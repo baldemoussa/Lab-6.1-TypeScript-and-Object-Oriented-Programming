@@ -1,14 +1,12 @@
 # Inventory Tracker
 
-## By [Mamadou Moussa Balde](https://www.linkedin.com/in/2mb/)
+A Vite page that builds five products in TypeScript and draws them in one table.
 
-A Vite page that builds five products in TypeScript and draws them in one table. The heading is **Inventory Tracker**. The browser tab title is **My inventory Tracker App**. Nothing on the page is clickable. The rows stay in the order the products were created.
+## Description
 
-The page does not set a background color. On a narrow window the Details column runs past the right edge and the page scrolls sideways. This screenshot shows the whole table.
+The heading is **Inventory Tracker**. The browser tab title is **My inventory Tracker App**. Nothing on the page is clickable. The rows stay in the order the products were created.
 
-![Inventory table with five products](docs/screenshots/inventory.png)
-
-## What the table shows
+The page does not set a background color. On a narrow window the Details column runs past the right edge and the page scrolls sideways. The screenshot shows the whole table.
 
 | ID | SKU | Name | Price | Price with tax | Weight / file size |
 | --- | --- | --- | --- | --- | --- |
@@ -28,8 +26,6 @@ Every cell in the Price column ends with `}`. The template writes an extra brace
 
 The Details column repeats id, SKU, name, and price from `displayDetails()`.
 
-## Console
-
 The same five products are printed in the browser console, once sorted by name and once by price from high to low. Those sorts do not change the table. Book is already $28.99 when the lines are printed.
 
 Sorted by name:
@@ -44,10 +40,33 @@ ID: 5, SKU: DGT002, Name: Large File, Price: $199.99 Price with tax: $199.99
 
 Sorted by price, high to low: Large File, Heavy Book, Book, Digital Book, Generic Product.
 
-## Getting started
+`Product` stores a private id, SKU, and name, and a protected price. Getters expose them. `getPriceWithTax` adds 5 percent. `displayDetails` returns one sentence.
+
+`PhysicalProduct` adds weight in kilograms and overrides tax to 10 percent. `applyBulkDiscount(weightThreshold, discountAmount)` subtracts `discountAmount` from the price when the weight is greater than the threshold.
+
+`DigitalProduct` adds a file size in megabytes, implements `DiscountableProduct.applyDiscount`, and overrides `getPriceWithTax` to return the price unchanged.
+
+`calculateTax` calls `getPriceWithTax`. `sortProductsByName` and `sortProductsByPrice` copy the array and sort that copy. `sortProductsByPrice` is called with `false`, so the console list is highest price first.
+
+## Screenshots
+
+![Inventory table with five products](docs/screenshots/inventory.png)
+
+## Getting Started
+
+### Dependencies
+
+* Node.js and npm
+
+### Installing
 
 ```bash
 npm install
+```
+
+### Executing program
+
+```bash
 npm run dev
 ```
 
@@ -59,29 +78,46 @@ Vite serves the page at `http://localhost:5173/`.
 | `npm run build` | Type-check with `tsc`, then build for production |
 | `npm run preview` | Serve the production build |
 
-## Products
+## Help
 
-`Product` stores a private id, SKU, and name, and a protected price. Getters expose them. `getPriceWithTax` adds 5 percent. `displayDetails` returns one sentence.
+Every Price cell ends with an extra `}`. Generic Product's weight cell is the word `undefined`. On a narrow window the Details column runs past the right edge.
 
-`PhysicalProduct` adds weight in kilograms and overrides tax to 10 percent. `applyBulkDiscount(weightThreshold, discountAmount)` subtracts `discountAmount` from the price when the weight is greater than the threshold.
+## Authors
 
-`DigitalProduct` adds a file size in megabytes, implements `DiscountableProduct.applyDiscount`, and overrides `getPriceWithTax` to return the price unchanged.
+[Mamadou Moussa Balde](https://www.linkedin.com/in/2mb/)
 
-`calculateTax` calls `getPriceWithTax`. `sortProductsByName` and `sortProductsByPrice` copy the array and sort that copy. `sortProductsByPrice` is called with `false`, so the console list is highest price first.
+## Version History
 
-# Critical Thinking
+* Current local run
+    * Vite at `http://localhost:5173/`
+    * Five products, with Book discounted from $29.99 to $28.99
+
+## License
+
+This folder does not include a `LICENSE.md` file.
+
+## Acknowledgments
+
+* [README template](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc)
+
+## Critical Thinking
 
 ### 1. How does TypeScript enforce type safety in this object-oriented program?
+
 TypeScript enforces type safety by allowing developers to define static types for class properties, method parameters, and return values (e.g., specifying a `price` must be a `number`). It validates these types at compile-time, catching errors before the code runs. Additionally, it ensures that instances of classes strictly adhere to their defined interfaces or parent class structures.
 
 ### 2. How did inheritance reduce code duplication for PhysicalProduct and DigitalProduct?
+
 Inheritance allows both `PhysicalProduct` and `DigitalProduct` to inherit shared properties (like `id`, `name`, and `price`) and methods from a common base `Product` class. This means the core properties and logic only need to be written once in the `Product` class, preventing the need to duplicate that same code across all specific product subclasses.
 
 ### 3. What are the benefits of using encapsulation and access modifiers (public, private, protected) in this context?
+
 Encapsulation safeguards an object's internal state. Using access modifiers:
-- `private` prevents external code from directly modifying critical properties (like an internal ID), protecting the object from invalid states.
-- `protected` allows subclasses to access base class properties while keeping them hidden from the outside.
-- `public` defines a controlled, predictable API (via methods or getters/setters) for external code to interact with the object safely, hiding the underlying implementation details.
+
+* `private` prevents external code from directly modifying critical properties (like an internal ID), protecting the object from invalid states.
+* `protected` allows subclasses to access base class properties while keeping them hidden from the outside.
+* `public` defines a controlled, predictable API (via methods or getters/setters) for external code to interact with the object safely, hiding the underlying implementation details.
 
 ### 4. If you had to add a new type of product (e.g., a SubscriptionProduct), how would polymorphism make this extension straightforward?
+
 Polymorphism allows different subclasses to be treated as instances of their common base class. If you add a `SubscriptionProduct` that inherits from `Product`, you can add it to an existing array of `Product`s. When you call a shared method (like `getDetails()`) on each item in the array, the specific implementation for `SubscriptionProduct` will automatically execute. You don't need to write custom logic or complex `if-else` checks to handle the new product type in the rest of your program.
